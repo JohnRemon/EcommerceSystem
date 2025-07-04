@@ -38,6 +38,9 @@ public class Cart {
             if(item.getProduct() instanceof ShippableProduct) {
                 shippableItems.add(item);
             }
+            if(item.getProduct().isExpired()){
+                throw new ProductExpired(item.getProduct().getName() + " has Expired");
+            }
             subTotal += item.getProduct().getPrice() * item.getQuantity();
         }
 
@@ -57,14 +60,14 @@ public class Cart {
         //Print the Shipping Details and Weight
         System.out.println("** Shipment Notice **");
         for(Item item : shippableItems){
-            System.out.println(item.getQuantity() + "x " + item.getProduct().getName() + " " + ((ShippableProduct) item.getProduct()).getWeight() + "g");
+            System.out.println(item.getQuantity() + "x " + item.getProduct().getName() + " " + ((ShippableProduct) item.getProduct()).getWeight() * item.getQuantity() + "g");
         }
         System.out.println("Total Package Weight " + totalWeight / 1000 + "kg\n");
 
         //Print the Checkout Receipt and Fees
         System.out.println("** Checkout Receipt **");
         for(Item item : cart.getItems()){
-            System.out.println(item.getQuantity() + "x " + item.getProduct().getName() + " " + item.getProduct().getPrice());
+            System.out.println(item.getQuantity() + "x " + item.getProduct().getName() + " " + item.getProduct().getPrice() * item.getQuantity());
         }
         System.out.println("----------------------");
         System.out.printf("Subtotal          %.1f\n", subTotal);
